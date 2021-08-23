@@ -1,0 +1,32 @@
+name: Object remapping from JSON to JSON
+description: Simple utility to remap keys, join or create JSON object values
+author: Nick Partridge <nick.ryan.partridge@gmail.com>
+branding:
+  icon: 'map'
+  color: 'white'
+inputs:
+  # any number of path:value mappings (see readme examples)
+  # path.to_my.object: # dot case with snake case property keys
+  #   description: Value to place at a given object path
+  # path.*.object: # dot case with object un-filtering
+  #   description: Array of values to place at each object of the * array
+  ####################### Defined Inputs ##############################
+  # under under inputs are to avoid name clashes with unknown mapping inputs
+  __depth:
+    description: Depth of final returned object
+    required: false
+    default: '0'
+  __case: # non-defined inputs are discoverable in uppercase (i.e. `INPUT_<input name>`)
+    description: Casing of object keys
+    required: false
+    default: '"camel"'
+  __deep_casing:
+    description: Apply casing to only top level input paths
+    required: false
+    default: 'false' # default applies casing to all levels of objects
+outputs:
+  json:
+    description: remapped json output as a string
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

@@ -1,0 +1,102 @@
+name: Continuous Integration Tests
+
+concurrency:
+  group: ${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - 'releases/*'
+
+jobs:
+  build:
+    name: Test Action Build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v2
+      - name: Install node_modules
+        uses: bahmutov/npm-install@v1
+      - run: npm run all
+  test:
+    name: Test Action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create mock test object
+        id: mock
+        # example object being tested
+        # {
+        #   one: 1,
+        #   two: {
+        #     one: 1,
+        #   },
+        #   three: {
+        #     two: {
+        #       one: 1,
+        #     },
+        #   },
+        #   numbers: [1, 2, 3],
+        #   array: [
+        #     {
+        #       test: 'key1',
+        #       deeper: {
+        #         deep: 1,
+        #       },
+        #     },
+        #     {
+        #       test: 'key2',
+        #     },
+        #   ],
+        # }
+        run: echo "::set-output name=json::{\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}"
+      - name: Works with simple values
+        id: test1
+        uses: ./
+        with:
+          number: 21
+          string: 'a string'
+          yes: true
+          no: false
+          arr: '["one", "two"]'
+          obj: '{ "one": 1 }'
+      - run: '[[ ${{ fromJSON(steps.test1.outputs.json).number }} == 21 ]]'
+      - run: '[[ "${{ fromJSON(steps.test1.outputs.json).string }}" == "a string" ]]'
+      - run: '[[ ${{ fromJSON(steps.test1.outputs.json).yes }} == true ]]'
+      - run: '[[ ${{ fromJSON(steps.test1.outputs.json).no }} == false ]]'
+      - run: '[[ "${{ fromJSON(steps.test1.outputs.json).arr[0] }}" == "one" ]]'
+      - run: '[[ "${{ fromJSON(steps.test1.outputs.json).arr[1] }}" == "two" ]]'
+      - run: '[[ ${{ fromJSON(steps.test1.outputs.json).obj.one }} == 1 ]]'
+      - name: Works with deep complex values
+        id: test2
+        uses: ./
+        with:
+          test.deep.deeper: ${{ steps.mock.outputs.json }}
+      - run: '[[ ${{ fromJSON(steps.test2.outputs.json).test.deep.deeper.one }} == 1 ]]'
+      - name: Overrides previous values
+        id: test3
+        uses: ./
+        with:
+          test: ${{ steps.mock.outputs.json }}
+          test.one: 2
+      - run: '[[ ${{ fromJSON(steps.test3.outputs.json).test.one }} == 2 ]]'
+      - name: Unfilters filtered values
+        id: test4
+        uses: ./
+        with:
+          test.*.prop: ${{ toJSON(fromJSON(steps.mock.outputs.json).array.*.test) }}
+      - run: '[[ "${{ fromJSON(steps.test4.outputs.json).test[0].prop }}" == "key1" ]]'
+      - run: '[[ "${{ fromJSON(steps.test4.outputs.json).test[1].prop }}" == "key2" ]]'
+      - name: Trims object by depth
+        id: test5
+        uses: ./
+        with:
+          __depth: 1
+          first: 1
+          deep.deeper: 1
+      - run: '[[ ${{ fromJSON(steps.test5.outputs.json).first }} == 1 ]]'
+      - run: '[[ "${{ fromJSON(steps.test5.outputs.json).deep.deeper }}" == "" ]]'

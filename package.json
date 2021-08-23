@@ -1,0 +1,53 @@
+{
+  "name": "object-remap",
+  "version": "1.0.0",
+  "author": "Nick Partridge <nick.ryan.partridge@gmail.com>",
+  "description": "Basic action utility to remap objects in github action workflow",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json --clean && tsc -p tsconfig.build.json",
+    "lint": "NODE_ENV=production eslint --quiet --ext .tsx,.ts,.js .",
+    "package": "ncc build lib/main.js --source-map --license licenses.txt && sh clean_dist.sh",
+    "test": "jest",
+    "all": "npm run build && npm run lint && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actions/typescript-action.git"
+  },
+  "keywords": [
+    "actions",
+    "node",
+    "setup"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.5.0",
+    "change-case": "^4.1.2",
+    "joi": "^17.4.2",
+    "lodash.get": "^4.4.2",
+    "lodash.set": "^4.3.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.1",
+    "@types/lodash.get": "^4.4.6",
+    "@types/lodash.mapkeys": "^4.6.6",
+    "@types/lodash.set": "^4.3.6",
+    "@types/node": "^16.3.3",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.28.3",
+    "@vercel/ncc": "^0.29.0",
+    "eslint": "^7.31.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-airbnb-typescript": "^13.0.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-github": "^4.1.1",
+    "eslint-plugin-import": "^2.24.1",
+    "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-unicorn": "^35.0.0",
+    "jest": "^27.0.6",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.1.3"
+  }
+}

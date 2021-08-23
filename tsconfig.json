@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": false,
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "target": "es6",
+    "lib": ["esnext"],
+    "allowJs": false,
+  },
+  "exclude": ["**/coverage", "**/dist", "./lib/**"]
+}
