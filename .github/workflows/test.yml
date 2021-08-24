@@ -1,24 +1,119 @@
 name: 'build-test'
-on: # rebuild any PRs and main branch changes
+on:
   pull_request:
   push:
     branches:
-      - main
+      - master
       - 'releases/*'
 
 jobs:
-  build: # make sure build/ci work properly
+  build:
+    name: Build action # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: |
-          npm install
+          npm ci
       - run: |
           npm run all
-  test: # make sure the action works on a clean machine without building
+  test:
+    name: Test action # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ./
+      - name: Create mock test object
+        id: mock
+        # example object being tested
+        # {
+        #   one: 1,
+        #   two: {
+        #     one: 1,
+        #   },
+        #   three: {
+        #     two: {
+        #       one: 1,
+        #     },
+        #   },
+        #   numbers: [1, 2, 3],
+        #   array: [
+        #     {
+        #       test: 'key1',
+        #       deeper: {
+        #         deep: 1,
+        #       },
+        #     },
+        #     {
+        #       test: 'key2',
+        #     },
+        #   ],
+        # }
+        run: echo "::set-output name=json::{\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}"
+      - name: Works with deep complex values
+        id: test1
+        uses: ./
         with:
-          milliseconds: 1000
+          test.deep.deeper: ${{ steps.mock.outputs.json }}
+      - run: '[[ ${{ fromJSON(steps.test1.outputs.json).test.deep.deeper.one }} == 1 ]]'
+      - name: Overrides previous values
+        id: test2
+        uses: ./
+        with:
+          test: ${{ steps.mock.outputs.json }}
+          test.one: 2
+      - run: '[[ ${{ fromJSON(steps.test2.outputs.json).one }} == 2 ]]'
+      - name: Unfilters filtered values
+        id: test3
+        uses: ./
+        with:
+          test.*.prop: ${{ toJSON(fromJSON(steps.mock.outputs.json).array.*.test) }}
+      - run: '[[ ${{ fromJSON(steps.test3.outputs.json).test[0].prop }} == "key1" ]]'
+      - run: '[[ ${{ fromJSON(steps.test3.outputs.json).test[1].prop }} == "key2" ]]'
+      - name: Trims object by depth
+        id: test4
+        uses: ./
+        with:
+          __depth: 1
+          first: 1
+          deep.deeper: 1
+      - run: '[[ ${{ fromJSON(steps.test4.outputs.json).first }} == 1 ]]'
+      - run: '[[ "${{ fromJSON(steps.test4.outputs.json).deep.deeper }}" == "" ]]'
+  case-checking:
+    name: Testing casing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Case check - camel
+        uses: ./
+        with:
+          __case: camel
+          camelCase: 1
+          camelCase.camelCase: 1
+          camelCase.*.camelCase: 1
+      - name: Case check - snake
+        uses: ./
+        with:
+          # __case: snake
+          camel_case: 1
+          camel_case.camel_case: 1
+          camel_case.*.camel_case: 1
+      - name: Case check - pascal
+        uses: ./
+        with:
+          __case: pascal
+          CamelCase: 1
+          CamelCase.CamelCase: 1
+          CamelCase.*.CamelCase: 1
+      - name: Case check - lower
+        uses: ./
+        with:
+          __case: lower
+          camel_case: 1
+          camel_case.camel_case: 1
+          camel_case.*.camel_case: 1
+      - name: Case check - upper
+        uses: ./
+        with:
+          __case: upper
+          CAMEL_CASE: 1
+          CAMEL_CASE.CAMEL_CASE: 1
+          CAMEL_CASE.*.CAMEL_CASE: 1

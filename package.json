@@ -1,14 +1,13 @@
 {
-  "name": "typescript-action",
+  "name": "object-remap",
   "version": "0.0.0",
-  "private": true,
-  "description": "TypeScript template action",
+  "description": "Basic action utility to remap objects in github action workflow",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
-    "lint": "eslint src/**/*.ts",
+    "lint": "NODE_ENV=production eslint --quiet --ext .tsx,.ts,.js .",
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
     "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
@@ -25,15 +24,28 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.4.0"
+    "@actions/core": "^1.4.0",
+    "change-case": "^4.1.2",
+    "lodash.get": "^4.4.2",
+    "lodash.set": "^4.3.2"
   },
   "devDependencies": {
+    "@types/jest": "^27.0.1",
+    "@types/lodash.get": "^4.4.6",
+    "@types/lodash.set": "^4.3.6",
     "@types/node": "^16.3.3",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.28.3",
     "@vercel/ncc": "^0.29.0",
     "eslint": "^7.31.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-airbnb-typescript": "^13.0.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-github": "^4.1.1",
-    "eslint-plugin-jest": "^24.3.6",
+    "eslint-plugin-import": "^2.24.1",
+    "eslint-plugin-jest": "^24.4.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-unicorn": "^35.0.0",
     "jest": "^27.0.6",
     "js-yaml": "^4.1.0",
     "prettier": "2.2.1",

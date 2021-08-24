@@ -1,9 +1,10 @@
 module.exports = {
+  testMatch: ['**/?(*.)+(test).[jt]s?(x)'],
+  preset: 'ts-jest',
   clearMocks: true,
-  moduleFileExtensions: ['js', 'ts'],
-  testMatch: ['**/*.test.ts'],
-  transform: {
-    '^.+\\.ts$': 'ts-jest'
+  globals: {
+    'ts-jest': {
+      tsconfig: 'tsconfig.json',
+    },
   },
-  verbose: true
 }

@@ -1,11 +1,24 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: Remap object from JSON
+description: Basic action utility to remap objects in github action workflow
+author: Nick Partridge <nick.ryan.partridge@gmail.com>
 inputs:
-  milliseconds: # change this
-    required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  # any number of path:value mappings (see readme examples)
+  # path.to.object: # dot case
+  #   description: Value to place at a given object path
+  # path.*.object: # dot case with object un-filtering
+  #   description: Array of values to place at each object of the * array
+  ####################### Defined Inputs ##############################
+  # under under inputs are to avoid name clashes with unknown mapping inputs
+  __depth:
+    description: Depth of final returned object
+    required: false
+  __case: # non-defined inputs are discovered in uppercase (i.e. `INPUT_<input name>`)
+    description: Casing of object keys
+    required: false
+    default: 'snake'
+outputs:
+  json:
+    description: remapped json output as a string
 runs:
   using: 'node12'
   main: 'dist/index.js'
