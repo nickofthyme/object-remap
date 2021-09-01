@@ -1,4 +1,11 @@
-import { parseValue, getAllInputs, trimByDepth, getMappedValues, InputCase, getCaseFunction } from './main';
+import {
+  parseValue,
+  getAllInputs,
+  trimByDepth,
+  getMappedValues,
+  InputCase,
+  getCaseFunction,
+} from './main';
 
 const object: any = {
   test2: 1,
@@ -136,20 +143,18 @@ describe('#getMappedValues', () => {
     process.env = {};
   });
 
-  it.each([
-    'string',
-    false,
-    true,
-    123,
-  ])('should set %s values from dot path', (value) => {
-    const key = 'test.prop';
-    process.env[`INPUT_${key.toUpperCase()}`] = value.toString();
-    expect(getMappedValues()).toEqual({
-      test: {
-        prop: value,
-      },
-    });
-  });
+  it.each(['string', false, true, 123])(
+    'should set %s values from dot path',
+    (value) => {
+      const key = 'test.prop';
+      process.env[`INPUT_${key.toUpperCase()}`] = value.toString();
+      expect(getMappedValues()).toEqual({
+        test: {
+          prop: value,
+        },
+      });
+    },
+  );
 
   it.each<any[]>([
     ['string1', 'string2'],

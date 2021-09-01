@@ -1,9 +1,5 @@
 import core from '@actions/core';
-import {
-  camelCase,
-  pascalCase,
-  snakeCase,
-} from 'change-case';
+import { camelCase, pascalCase, snakeCase } from 'change-case';
 import get from 'lodash.get';
 import set from 'lodash.set';
 
@@ -29,9 +25,21 @@ export function parseValue(value: unknown): unknown {
 }
 
 const caseMap: Record<InputCase, (s: string) => string> = {
-  snake: (s) => s.split('.').map((p) => p === '*' ? p : snakeCase(p)).join('.'),
-  camel: (s) => s.split('.').map((p) => p === '*' ? p : camelCase(p)).join('.'),
-  pascal: (s) => s.split('.').map((p) => p === '*' ? p : pascalCase(p)).join('.'),
+  snake: (s) =>
+    s
+      .split('.')
+      .map((p) => (p === '*' ? p : snakeCase(p)))
+      .join('.'),
+  camel: (s) =>
+    s
+      .split('.')
+      .map((p) => (p === '*' ? p : camelCase(p)))
+      .join('.'),
+  pascal: (s) =>
+    s
+      .split('.')
+      .map((p) => (p === '*' ? p : pascalCase(p)))
+      .join('.'),
   lower: (s) => s.toLowerCase(),
   upper: (s) => s.toUpperCase(),
 };
@@ -43,26 +51,32 @@ export function getAllInputs(): Inputs {
   const casingFunction = getCaseFunction(process.env.INPUT___CASE as any);
   core.info(`CASe ----> ${process.env.INPUT___CASE ?? ''}`);
 
-  return (Object.entries(process.env) ?? [])
-    .reduce((result, [key, value]) => {
-
-      if (!key.startsWith('INPUT_') || value === undefined || key === 'INPUT___CASE') return result;
-      // TODO: configure casing since obfiscated in process.args
-      const inputName = casingFunction(key.slice('INPUT_'.length));
-
-      core.info(`CASSING ----> before: ${key} after: ${inputName}`);
-
-      try {
-      // All values are stringified so try to parse typed value
-        result[inputName] = JSON.parse(value) as unknown;
-      } catch {
-        result[inputName] = value;
-      }
+  return (Object.entries(process.env) ?? []).reduce((result, [key, value]) => {
+    if (
+      !key.startsWith('INPUT_') ||
+      value === undefined ||
+      key === 'INPUT___CASE'
+    )
       return result;
-    }, {} as Inputs);
+    // TODO: configure casing since obfiscated in process.args
+    const inputName = casingFunction(key.slice('INPUT_'.length));
+
+    core.info(`CASSING ----> before: ${key} after: ${inputName}`);
+
+    try {
+      // All values are stringified so try to parse typed value
+      result[inputName] = JSON.parse(value) as unknown;
+    } catch {
+      result[inputName] = value;
+    }
+    return result;
+  }, {} as Inputs);
 }
 
-export function trimByDepth(object: Record<string, unknown>, depth?: number): Record<string, unknown> {
+export function trimByDepth(
+  object: Record<string, unknown>,
+  depth?: number,
+): Record<string, unknown> {
   if (!depth) return object;
 
   for (const key in object) {
@@ -70,7 +84,7 @@ export function trimByDepth(object: Record<string, unknown>, depth?: number): Re
 
     if (Array.isArray(value)) {
       if (depth === 1) delete object[key];
-      else for (const o of value)  trimByDepth(o, depth - 1); // arrays indices don't count on depth
+      else for (const o of value) trimByDepth(o, depth - 1); // arrays indices don't count on depth
     } else if (typeof value === 'object' && typeof value !== null) {
       if (depth === 1) delete object[key];
       else trimByDepth(object[key] as Record<string, unknown>, depth - 1);
@@ -93,7 +107,10 @@ export function getMappedValues(): Record<string, unknown> {
     if (inputs.hasOwnProperty(inputPath)) {
       const re = /(.+?)\.\*\.(.+)/;
       const value = inputs[inputPath];
-      const truncValue = typeof value === 'string' && value.length > 200 ? `${value.slice(0, 200)}...` : value as string;
+      const truncValue =
+        typeof value === 'string' && value.length > 200
+          ? `${value.slice(0, 200)}...`
+          : (value as string);
       core.info(`path: ${inputPath}`);
       core.info(`type: ${typeof value}`);
       core.info(`value: ${truncValue}`);
@@ -146,5 +163,3 @@ function run(): void {
 }
 
 void run();
-
-
