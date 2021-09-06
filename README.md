@@ -14,7 +14,7 @@ This action uses flexible imports for users to define custom `<path>:<value>` in
 __depth?: number
 ```
 
-This allows you to truncate an final remapped object to a given depth if you don't need the whole value. This impacts both the user-defined path and the defined array or object values. See the [_Simple - depth_](#simple---depth) example below
+This allows you to truncate a final remapped object to a given depth if you don't need the whole value. This impacts both the user-defined path and the defined array or object values. See the [_Simple - depth_](#simple---depth) example below
 
 ### `__case`
 
@@ -22,7 +22,7 @@ This allows you to truncate an final remapped object to a given depth if you don
 __case?: 'camel' | 'snake' | 'pascal' | 'upper' | 'lower' | 'kebab' = 'camel'
 ```
 
-This allows you overried the casing used for user-defined path inputs as well as keys of object values. By default this `__case` is applied to all user-defined paths only. You may override user-defined object values by setting `__deep_casing` to `true`. All user-defined path inputs should use `snake_case` to define the initial paths and set `__case` accordingly. See the [_Simple - casing_](#simple---casing) example below.
+This allows you override the casing used for user-defined path inputs as well as keys of object values. By default, this `__case` is applied to all user-defined paths only. You may override user-defined object values by setting `__deep_casing` to `true`. All user-defined path inputs should use `snake_case` to define the initial paths and set `__case` accordingly. See the [_Simple - casing_](#simple---casing) example below.
 
 | Word \ Case | `'camel'` (default) | `'snake'` | `'pascal'` | `'upper'` | `'lower'` | `'kebab'`
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -40,11 +40,11 @@ This input allows you to control when the casing is applied to the object or arr
 
 ### User-defined inputs (e.g. `<path>:<value>`)
 
-User defined inputs are custom `<path>:<value>` pairs where the key represents the path of the property to set on an object in dot notation, think [`lodash.set`](https://lodash.com/docs/4.17.15#set). The individual property keys should be in `snake_case` (i.e. `path_to.some_prop`) to enable casing these _Unexpected_ inputs in the final output via [`__case`](#case), this does **NOT** apply to keys within the object or array values. See usage examples below.
+User-defined inputs are custom `<path>:<value>` pairs where the key represents the path of the property to set on an object in dot notation, think [`lodash.set`](https://lodash.com/docs/4.17.15#set). The individual property keys should be in `snake_case` (i.e. `path_to.some_prop`) to enable casing these _Unexpected_ inputs in the final output via [`__case`](#case), this does **NOT** apply to keys within the object or array values. See usage examples below.
 
 This action also supports _unfiltering_ values using the `*` syntax as a wildcard for array indices (i.e. `people.*.name`). This is essentially the inverse of [Object filters](https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#object-filters).
 
-GitHub does not fully support this which is why there are some restrictions such as using `snake_case`. This same strategy is used by [`octokit/request-action`](https://github.com/marketplace/actions/github-api-request) to assign route-specific url path parameters. Because of this, you will see a warning similar to that below in your github action. This is safe to ignore.
+GitHub does not fully support this which is why there are some restrictions such as using `snake_case`. This same strategy is used by [`octokit/request-action`](https://github.com/marketplace/actions/github-api-request) to assign route-specific url path parameters. Because of this, you will see a warning similar to that below in your GitHub action. This is safe to ignore.
 
 ```
 Warning: Unexpected input(s) 'test', 'test.one' valid inputs are ['__depth', '__case', '__deep_casing']
@@ -126,7 +126,7 @@ The value of `steps.test.outputs.json` would be...
 
 ### Simple - depth
 
-You can set `__depth` to limit the depth of final remapped object. The default is `0` which will **NOT** alter the depth of the values.
+You can set `__depth` to limit the depth of the final remapped object. The default is `0` which will **NOT** alter the depth of the values.
 
 ```yml
 jobs:
@@ -158,7 +158,7 @@ The value of `steps.test.outputs.json` would be...
 }
 ```
 
-> **Note:** the array index is **NOT** counted as a depth. Also any empty object `{}` path will be recursively removed. Be cautious when using this with large inputs values as you may encounter the [_Argument is too long_](#argument-is-too-long) error which will throw an error before the `__depth` is ever applied.
+> **Note:** the array index is **NOT** counted as a depth. Also, any empty object `{}` path will be recursively removed. Be cautious when using this with large inputs values as you may encounter the [_Argument is too long_](#argument-is-too-long) error which will throw an error before the `__depth` is ever applied.
 
 ### Simple - casing
 
@@ -336,7 +336,7 @@ The value of `steps.test.outputs.json` would be...
 
 ### Complex - _unfiltering_ value from _filtered_ data
 
-GitHub actions have a special syntax called [Object filters](https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#object-filters) which allows you to pull off individual value from a nested array of objects.
+GitHub actions have a special syntax called [Object filters](https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#object-filters) which allows you to pull off individual values from a nested array of objects.
 
 To help leverage this syntax, we added the idea of _unfiltering_, which as you'd expect, reverses an array of values into a specified key.
 
@@ -420,7 +420,7 @@ jobs:
 
 ## Limitations
 
-Aside from the obvious limitations to assign values in any way you desire, including assigning values to array indecies, the following limitations are unavoidable.
+Aside from the obvious limitations to assign values in any way you desire, including assigning values to array indices, the following limitations are unavoidable.
 
 ### Argument is too long
 
@@ -432,7 +432,7 @@ Error: Argument list too long
 
 ![image](https://user-images.githubusercontent.com/19007109/132149632-40fff6dd-4de6-46ff-a42c-cb7e5cc1fdfb.png)
 
-This limit is easily exceeded by the full `output` of verbose api requests. In such case, you could possibly limit the count received from the api request or use [Object filters](https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#object-filters) to pluck and assign only the values you need. For example...
+This limit is easily exceeded by the full `output` of verbose api requests. In such a case, you could possibly limit the count received from the api request or use [Object filters](https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#object-filters) to pluck and assign only the values you need. For example...
 
 ```yml
 jobs:
