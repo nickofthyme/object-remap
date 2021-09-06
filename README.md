@@ -177,7 +177,7 @@ jobs:
           my_key.my_nested_key: 1
 ```
 
-> **Note:** The case of the initial path should always be `snake_case`. This is due to a limitation with GitHub actions using flexible inputs. See [_User-defined inputs_](#user-defined-inputs) section above.
+> **Note:** The case of the initial path should always be `snake_case`. This is due to a limitation with GitHub actions using flexible inputs. See [_User-defined inputs_](#user-defined-inputs-eg-pathvalue) section above.
 
 The value of `steps.test.outputs.json` would be...
 
@@ -458,7 +458,7 @@ jobs:
 
 ## Troubleshooting
 
-All defined input options (i.e. `__case`, `__depth` & `__deep_casing`) will failover to their default value if an invalid option is supplied. If you experience unanticipated outputs based on the inputs you provided see `warnings` in the GitHub action logs to make sure the correct inputs are used. Ignore the warning mentioned in [User-defined inputs](#user-defined-inputs) section.
+All defined input options (i.e. `__case`, `__depth` & `__deep_casing`) will failover to their default value if an invalid option is supplied. If you experience unanticipated outputs based on the inputs you provided see `warnings` in the GitHub action logs to make sure the correct inputs are used. Ignore the warning mentioned in [User-defined inputs](#user-defined-inputs-eg-pathvalue) section.
 
 In addition, this action will always log the parsed user-defined `Inputs` including `path`, `type` and `value`, as well as the final remapped `Output` to enable easy troubleshooting. These logs would look something like...
 
