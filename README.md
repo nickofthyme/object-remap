@@ -253,7 +253,7 @@ For the following _complex_ examples, let's assume that we receive the following
 }
 ```
 
-Specifically, the `"Get mock test object"` step will set the above object to its output (via [`::set-output`](https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter)) and makes it available via `steps.mock.outputs.json` in other steps.
+Specifically, the `"Get mock test object"` step will set the above object to its output (via [`$GITHUB_OUTPUT`](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter)) and makes it available via `steps.mock.outputs.json` in other steps.
 
 ---
 
@@ -266,7 +266,7 @@ jobs:
     steps:
       - name: Get mock test object
         id: mock
-        run: echo "::set-output name=json::{\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}"
+        run: echo "json={\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}" >> "$GITHUB_OUTPUT"
       - name: Complex values
         id: test # used to access output in other steps
         uses: nickofthyme/object-remap@v1
@@ -316,7 +316,7 @@ jobs:
     steps:
       - name: Get mock test object
         id: mock
-        run: echo "::set-output name=json::{\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}"
+        run: echo "json={\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}" >> "$GITHUB_OUTPUT"
       - name: Complex values
         id: test # used to access output in other steps
         uses: nickofthyme/object-remap@v1
@@ -347,7 +347,7 @@ jobs:
     steps:
       - name: Get mock test object
         id: mock
-        run: echo "::set-output name=json::{\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}"
+        run: echo "json={\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}" >> "$GITHUB_OUTPUT"
       - name: Complex values
         id: test # used to access output in other steps
         uses: nickofthyme/object-remap@v1

@@ -53,7 +53,7 @@ jobs:
         #     },
         #   ],
         # }
-        run: echo "::set-output name=json::{\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}"
+        run: echo "json={\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}" >> "$GITHUB_OUTPUT"
       - name: Works with simple values
         id: test1
         uses: ./
