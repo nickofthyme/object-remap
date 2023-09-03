@@ -43,6 +43,10 @@ jobs:
         id: install
         run: npm ci
 
+      - name: Build lib/ Directory
+        id: lib
+        run: npm run all
+
       - name: Build dist/ Directory
         id: build
         run: npm run package
