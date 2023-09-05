@@ -16,9 +16,9 @@ jobs:
     name: Test Action Build
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
       - name: Install node_modules
         uses: bahmutov/npm-install@v1
       - run: npm run all
@@ -26,7 +26,7 @@ jobs:
     name: Test Action
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Create mock test object
         id: mock
         # example object being tested
@@ -53,7 +53,7 @@ jobs:
         #     },
         #   ],
         # }
-        run: echo "::set-output name=json::{\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}"
+        run: echo "json={\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}" >> "$GITHUB_OUTPUT"
       - name: Works with simple values
         id: test1
         uses: ./
