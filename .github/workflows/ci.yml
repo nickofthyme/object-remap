@@ -34,9 +34,9 @@ jobs:
   test-matrix:
     name: Test Action with Matrix ${{ matrix.os }} ${{ matrix.version }}
     runs-on: ubuntu-latest
-    needs: test-matrix
+    needs: build-matrix
     strategy:
-      matrix: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.build-matrix.outputs.matrix) }}
     steps:
       - name: Dump matrix context
         env:
