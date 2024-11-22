@@ -1,4 +1,4 @@
-import set from 'lodash.set';
+import set from 'set-value';
 
 import { getDefinedInputs, getUserInputs } from './inputs';
 import { getMappedValues, trimByDepth } from './mappings';
@@ -189,8 +189,10 @@ describe('#getMappedValues', () => {
       const obj = {};
       const casingFunction = getCaseFunction(KeyCase.camel);
       const [, first, second] = /(.*?)\.\*\.(.*)/.exec(casingFunction(path)) ?? [];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       set(obj, first, values.map((v) => {
         const subObj = {};
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         set(subObj, second, v);
         return subObj;
       }));

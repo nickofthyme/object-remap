@@ -16,17 +16,17 @@ jobs:
     name: Test Action Build
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup node
-        uses: actions/setup-node@v3
-      - name: Install node_modules
-        uses: bahmutov/npm-install@v1
+        uses: actions/setup-node@v4
+      - name: Install node_modules with caching
+        uses: bahmutov/npm-install@v1.10.4
       - run: npm run all
   test:
     name: Test Action
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Create mock test object
         id: mock
         # example object being tested

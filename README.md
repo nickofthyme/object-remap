@@ -73,7 +73,7 @@ jobs:
     steps:
       - name: Simple
         id: test # used to access output in other steps
-        uses: nickofthyme/object-remap@v1
+        uses: nickofthyme/object-remap@v3
         with:
           key_number: 1
           key_string: string1
@@ -107,7 +107,7 @@ jobs:
     steps:
       - name: Simple - nested
         id: test # used to access output in other steps
-        uses: nickofthyme/object-remap@v1
+        uses: nickofthyme/object-remap@v3
         with:
           top.deep.very_deep: 1
 ```
@@ -135,7 +135,7 @@ jobs:
     steps:
       - name: Simple - depth
         id: test # used to access output in other steps
-        uses: nickofthyme/object-remap@v1
+        uses: nickofthyme/object-remap@v3
         with:
           __depth: 2
           one: '{ "two": 2 }'
@@ -171,7 +171,7 @@ jobs:
     steps:
       - name: Simple - casing
         id: test # used to access output in other steps
-        uses: nickofthyme/object-remap@v1
+        uses: nickofthyme/object-remap@v3
         with:
           __case: kebab
           my_key.my_nested_key: 1
@@ -200,7 +200,7 @@ jobs:
     steps:
       - name: Simple - deep casing
         id: test # used to access output in other steps
-        uses: nickofthyme/object-remap@v1
+        uses: nickofthyme/object-remap@v3
         with:
           __case: upper
           __deep_casing: true
@@ -269,7 +269,7 @@ jobs:
         run: echo "json={\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}" >> "$GITHUB_OUTPUT"
       - name: Complex values
         id: test # used to access output in other steps
-        uses: nickofthyme/object-remap@v1
+        uses: nickofthyme/object-remap@v3
         with:
           test: ${{ steps.mock.outputs.json }}
 
@@ -319,7 +319,7 @@ jobs:
         run: echo "json={\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}" >> "$GITHUB_OUTPUT"
       - name: Complex values
         id: test # used to access output in other steps
-        uses: nickofthyme/object-remap@v1
+        uses: nickofthyme/object-remap@v3
         with:
           test.value: ${{ fromJSON(steps.mock.outputs.json).two.one }} # value is just 1
 ```
@@ -350,7 +350,7 @@ jobs:
         run: echo "json={\"one\":1,\"two\":{\"one\":1},\"three\":{\"two\":{\"one\":1}},\"numbers\":[1,2,3],\"array\":[{\"test\":\"key1\",\"deeper\":{\"deep\":1}},{\"test\":\"key2\"}]}" >> "$GITHUB_OUTPUT"
       - name: Complex values
         id: test # used to access output in other steps
-        uses: nickofthyme/object-remap@v1
+        uses: nickofthyme/object-remap@v3
         with:
           test.*.key: ${{ fromJSON(steps.mock.outputs.json).array.*.test }} # value is just ['key1', 'key2`]
 ```
@@ -403,7 +403,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create matrix
         id: save
-        uses: nickofthyme/object-remap@v1
+        uses: nickofthyme/object-remap@v3
         with:
           include.*.number: ${{ toJSON(fromJSON(steps.fetch.outputs.data).*.number) }}
           include.*.sha: ${{ toJSON(fromJSON(steps.fetch.outputs.data).*.head.sha) }}
@@ -449,7 +449,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       - name: Store matrix
         id: save
-        uses: nickofthyme/object-remap@v1
+        uses: nickofthyme/object-remap@v3
         with:
           include.*.number: ${{ toJSON(fromJSON(steps.fetch.outputs.data).*.number) }}
           include.*.head_sha: ${{ toJSON(fromJSON(steps.fetch.outputs.data).*.head.sha) }}

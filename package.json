@@ -1,19 +1,19 @@
 {
   "name": "object-remap",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "author": "Nick Partridge <nick.ryan.partridge@gmail.com>",
   "description": "Basic action utility to remap objects in github action workflow",
   "main": "lib/main.js",
   "scripts": {
-    "build": "tsc --build tsconfig.build.json --clean && tsc -p tsconfig.build.json",
+    "build": "rimraf ./lib && tsc -p tsconfig.build.json",
     "lint": "NODE_ENV=production eslint --quiet --ext .tsx,.ts,.js .",
-    "package": "ncc build lib/main.js --source-map --license licenses.txt && sh clean_dist.sh",
+    "package": "export NODE_OPTIONS=--openssl-legacy-provider; ncc build lib/main.js --source-map --license licenses.txt && sh clean_dist.sh",
     "test": "jest",
     "all": "npm run build && npm run lint && npm test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/nickofthyme/object-remap.git"
   },
   "keywords": [
     "actions",
@@ -22,18 +22,17 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.5.0",
+    "@actions/core": "^1.11.1",
     "change-case": "^4.1.2",
-    "joi": "^17.4.2",
-    "lodash.get": "^4.4.2",
-    "lodash.set": "^4.3.2"
+    "get-value": "^3.0.1",
+    "joi": "^17.13.3",
+    "set-value": "^4.1.0"
   },
   "devDependencies": {
+    "@types/get-value": "^3.0.5",
     "@types/jest": "^27.0.1",
-    "@types/lodash.get": "^4.4.6",
-    "@types/lodash.mapkeys": "^4.6.6",
-    "@types/lodash.set": "^4.3.6",
-    "@types/node": "^16.3.3",
+    "@types/node": "^20",
+    "@types/set-value": "^4.0.3",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.28.3",
     "@vercel/ncc": "^0.29.0",
@@ -47,6 +46,7 @@
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-unicorn": "^35.0.0",
     "jest": "^27.0.6",
+    "rimraf": "^6.0.1",
     "ts-jest": "^27.0.3",
     "typescript": "^4.1.3"
   }
