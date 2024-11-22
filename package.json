@@ -7,7 +7,7 @@
   "scripts": {
     "build": "rimraf ./lib && tsc -p tsconfig.build.json",
     "lint": "NODE_ENV=production eslint --quiet --ext .tsx,.ts,.js .",
-    "package": "ncc build lib/main.js --source-map --license licenses.txt && sh clean_dist.sh",
+    "package": "export NODE_OPTIONS=--openssl-legacy-provider; ncc build lib/main.js --source-map --license licenses.txt && sh clean_dist.sh",
     "test": "jest",
     "all": "npm run build && npm run lint && npm test"
   },
