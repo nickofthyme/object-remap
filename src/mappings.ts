@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
-import get from 'lodash.get';
-import set from 'lodash.set';
+import get from 'get-value';
+import set from 'set-value';
 
 import { getDefinedInputs, getUserInputs } from './inputs';
 import { KeyCasingFunction, UnknownRecord } from './types';
@@ -16,7 +16,7 @@ export function trimByDepth<T extends UnknownRecord, O extends UnknownRecord = U
     renameKeys(obj, casingFunction);
   }
 
-  if (depth === 0 && !deepCasing) return obj as O;
+  if (depth === 0 && !deepCasing) return obj as unknown as O;
 
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
@@ -36,7 +36,7 @@ export function trimByDepth<T extends UnknownRecord, O extends UnknownRecord = U
     }
   }
 
-  return obj as O;
+  return obj as unknown as O;
 }
 
 function renameKeys(obj: UnknownRecord | UnknownRecord[], casingFunction: KeyCasingFunction) {
